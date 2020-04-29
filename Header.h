@@ -5,17 +5,19 @@
 #include "structs.h"
 
 int read_number(int, int);
+char* smart_str();
 char* request_way();
 unsigned int file_type_check(FILE*);
 
-void get_width(BitMap, FILE*);
-void get_height(BitMap, FILE*);
+//void get_size_of_matrix(BitMap, FILE*);
+unsigned int get_width(FILE *f);
+unsigned int get_height(FILE *f);
 
 void do_RGB_matrix(unsigned int, unsigned int, RGB**);
 void do_BW_matrix(unsigned int, unsigned int, BW**);
 
-void get_RGB_matrix(unsigned int, unsigned int, RGB**, FILE *);
-void get_BW_matrix(unsigned int, unsigned int, BW**, RGB**);
+RGB** get_RGB_matrix(unsigned int, unsigned int, RGB**, FILE *);
+BW** get_BW_matrix(unsigned int, unsigned int, BW**, RGB**);
 
 void print_RGB_matrix(unsigned int, unsigned int, RGB**);
 void print_BW_matrix(unsigned int, unsigned int, BW**);
