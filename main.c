@@ -47,12 +47,14 @@ int main()
     fclose(f);////////////////////////////////////////////
 
     BW** m;
-    do_BW_matrix(image.height, image.width, m);                  //error
+    do_BW_matrix(image.height, image.width, *m);                  //error
     get_BW_matrix(image.height, image.width, m, matrix);      //error
     
     free (matrix);
             
     print_BW_matrix(image.height, image.width, m);              //error
+    
+//
     
     free (m);
     return 0;

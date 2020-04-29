@@ -68,18 +68,21 @@ void get_height(BitMap image, FILE *f)
 
 void do_RGB_matrix(unsigned int height, unsigned int width, RGB**matrix)
 {
-    matrix = (RGB **)malloc(height*sizeof(unsigned int *));
+    matrix = (RGB **)calloc(height, sizeof(unsigned int *));
     for(unsigned int i = 0; i < height; i++)
     {
-        matrix[i] = (RGB *)malloc(width*sizeof(unsigned int *));
+        matrix[i] = (RGB *)calloc(width, sizeof(unsigned int *));
     }
 }
 void do_BW_matrix(unsigned int height, unsigned int width, BW** m)
 {
-    m = (BW **)malloc(height*sizeof(unsigned int *));
+    while (!(height % 4)) height += 1;
+    while (!(width  % 3))  width  += 1;
+    
+    m = (BW **)calloc(height, sizeof(unsigned int *));
     for(unsigned int i = 0; i < height; i++)
     {
-        m[i] = (BW *)malloc(width*sizeof(unsigned int *));
+        m[i] = (BW *)calloc(width, sizeof(unsigned int *));
     }
 }
 
@@ -105,7 +108,7 @@ void get_BW_matrix(unsigned int height, unsigned int width, BW** m, RGB **matrix
     {
         for (unsigned int j = 0; j != width; j++)
         {
-            m[i][j] = (matrix[i][j].red + matrix[i][j].green + matrix[i][j].blue   ) / 3;
+            m[i][j].darkness = (matrix[i][j].red + matrix[i][j].green + matrix[i][j].blue   ) / 3;
         }
     }
 }
@@ -138,3 +141,4 @@ void print_BW_matrix(unsigned int height, unsigned int width, BW** m)
         printf("]\n");
     }
 }
+
