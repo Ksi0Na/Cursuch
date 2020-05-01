@@ -147,10 +147,10 @@ void print_RGB_matrix(unsigned int height, unsigned int width, RGB **matrix)
 }
 void print_BW_matrix(unsigned int height, unsigned int width, BW** m)
 {
-    for (unsigned int i = 0; i != height; i++)
+    for (unsigned int i = 0; i < height; i++)
     {
         printf("\n[");
-        for (unsigned int j = 0; j != width; j++)
+        for (unsigned int j = 0; j < width; j++)
         {
             printf(" %u ", m[i][j].darkness);
         }
@@ -173,35 +173,35 @@ int check_open_file(char* way, FILE *f)
     return 0;
 }
 
-void print_RGB_matrix_in_file(unsigned int height, unsigned int width, FILE *f)
-{
-//    fseek(f, 54, 0);
-//    for (unsigned int i = 0; i != height; i++)
-//    {
-//        printf("[");
-//        for (unsigned int j = 0; j != width; j++)
-//        {
-//            int r, g, b;
-//            r = fgetc(f);    
-//            g = fgetc(f);  
-//            b = fgetc(f); 
-//           // a = fgetc(f);
+//void print_RGB_matrix_in_file(unsigned int height, unsigned int width, FILE *f)
+//{
+////    fseek(f, 54, 0);
+////    for (unsigned int i = 0; i != height; i++)
+////    {
+////        printf("[");
+////        for (unsigned int j = 0; j != width; j++)
+////        {
+////            int r, g, b;
+////            r = fgetc(f);    
+////            g = fgetc(f);  
+////            b = fgetc(f); 
+////           // a = fgetc(f);
             
-//            printf(" %d.%d.%d", r, g, b);
-//        }
-//        printf("]\n\n");
-//    }
+////            printf(" %d.%d.%d", r, g, b);
+////        }
+////        printf("]\n\n");
+////    }
   
-    fseek(f, 0, 0);
-    int r = 0; int g = 0; //int b = 0;
-    for (unsigned int j =0; r != -1 ; j++)
-            {
-                r = fgetc(f); 
-                printf(" %d ", r);
-                g++;
-            }
-    printf("\nn = %d ", g);
-}
+//    fseek(f, 0, 0);
+//    int r = 0; int g = 0; //int b = 0;
+//    for (unsigned int j =0; r != -1 ; j++)
+//            {
+//                r = fgetc(f); 
+//                printf(" %d ", r);
+//                g++;
+//            }
+//    printf("\nn = %d ", g);
+//}
 
 void do_white(unsigned int new_height, unsigned int new_width, BW** m)
 {

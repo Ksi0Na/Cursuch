@@ -33,9 +33,9 @@ int main()
         matrix[i] = (RGB *)calloc(width, sizeof(unsigned int *));
     }
     //---------------get_memory_for_RGB_matrix------------------------
-    get_RGB_matrix(height, width, matrix, f);        //error
-    print_RGB_matrix(height, width, matrix);
-    print_RGB_matrix_in_file(height, width, f);
+    get_RGB_matrix(height, width, matrix, f);        
+    //print_RGB_matrix(height, width, matrix);
+    //print_RGB_matrix_in_file(height, width, f);
     fclose(f);////////////////////////////////////////////
 
     BW** m;
@@ -44,21 +44,21 @@ int main()
     while (new_height % 4) new_height += 1;
     while (new_width  % 3)  new_width  += 1;
     //---------------get_memory_for_BW_matrix-------------------------
-    m = (BW **)calloc(height, sizeof(unsigned int *));
-    for(unsigned int i = 0; i < height; i++)
+    m = (BW **)calloc(new_height, sizeof(unsigned int *));
+    for(unsigned int i = 0; i < new_height; i++)
     {
-        m[i] = (BW *)calloc(width, sizeof(unsigned int *));
+        m[i] = (BW *)calloc(new_width, sizeof(unsigned int *));
     }
     //---------------get_memory_for_BW_matrix-------------------------
-    do_zeros(new_height, new_width, m);
-    get_BW_matrix(height, width, m, matrix);      //error 
+    do_white(new_height, new_width, m);
+    get_BW_matrix(height, width, m, matrix);     
     free (matrix);
-    print_BW_matrix(height, width, m);   
+    print_BW_matrix(new_height, new_width, m);   
 
     
 //
 //    free (matrix);
-    //free (m);
+    free (m);
     
     
     return 0;
