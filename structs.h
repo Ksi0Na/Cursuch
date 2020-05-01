@@ -15,12 +15,4 @@ typedef struct _RGB
 
 } RGB;
 
-typedef struct _BitMap
-{
-    unsigned int type;                      // 1-error
-    unsigned int width;                     // ширина
-    unsigned int height;                    // высота
-
-} BitMap;
-
 #endif // STUCTS_H

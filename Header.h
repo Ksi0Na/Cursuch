@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "structs.h"
 
+int check_open_file(char*, FILE*);
+
 int read_number(int, int);
 char* smart_str();
 char* request_way();
@@ -16,10 +18,13 @@ unsigned int get_height(FILE *f);
 void do_RGB_matrix(unsigned int, unsigned int, RGB**);
 void do_BW_matrix(unsigned int, unsigned int, BW**);
 
-RGB** get_RGB_matrix(unsigned int, unsigned int, RGB**, FILE *);
-BW** get_BW_matrix(unsigned int, unsigned int, BW**, RGB**);
+void get_RGB_matrix(unsigned int, unsigned int, RGB**, FILE *);
+void get_BW_matrix(unsigned int, unsigned int, BW**, RGB**);
+void do_zeros(unsigned int, unsigned int, BW**);
 
 void print_RGB_matrix(unsigned int, unsigned int, RGB**);
 void print_BW_matrix(unsigned int, unsigned int, BW**);
+void print_RGB_matrix_in_file(unsigned int, unsigned int, FILE*);
+
 
 #endif // HEADER_H

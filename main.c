@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include "structs.h"
@@ -7,63 +7,58 @@
 
 int main()
 {
-    char* way = request_way();
-
-    BitMap image;
     FILE *f;
+    //---------------------get_memory_for_way---------------------------
+    char* way = request_way();
+    //---------------------get_memory_for_way---------------------------
 
-    f = fopen(way, "r");////////////////////////////////////
-    if (!f) {
-        printf("Error: File not open\n");
-        main();
-    }
-    image.type = file_type_check(f);
-    if (image.type) {
+    f = fopen(way, "rb");////////////////////////////////////
+    if (check_open_file(way, f)) main();
+    free(way);
+
+    if ( file_type_check(f)) 
+    {
+        free(way);
         fclose(f);//////////////////////////////////////////
         main();
-    } else {
-        image.width = get_width(f);
-        image.height = get_height(f);
-//        printf("width = %u\n\n", image.width);
-//        printf("height = %u\n\n", image.height);
-    }
-    fclose(f);////////////////////////////////////////////
+    } 
+    unsigned int width = get_width(f);
+    unsigned int height = get_height(f);
 
-  
     RGB **matrix; 
-    matrix = (RGB **)calloc(image.height, sizeof(unsigned int *));
-    for(unsigned int i = 0; i < image.height; i++)
+    //---------------get_memory_for_RGB_matrix------------------------
+    matrix = (RGB **)calloc(height, sizeof(unsigned int *));
+    for(unsigned int i = 0; i < height; i++)
     {
-        matrix[i] = (RGB *)calloc(image.width, sizeof(unsigned int *));
+        matrix[i] = (RGB *)calloc(width, sizeof(unsigned int *));
     }
-    
-    f = fopen(way, "rb");///////////////////////////////////
-    if (!f)
-    {
-        printf("Error: File not open\n");
-        return -1;
-    }
-    get_RGB_matrix(image.height, image.width, matrix, f);        //error
-    print_RGB_matrix(image.height, image.width, matrix);        
+    //---------------get_memory_for_RGB_matrix------------------------
+    get_RGB_matrix(height, width, matrix, f);        //error
+    print_RGB_matrix(height, width, matrix);
+    print_RGB_matrix_in_file(height, width, f);
     fclose(f);////////////////////////////////////////////
 
     BW** m;
-    while (!(image.height % 4)) image.height += 1;
-    while (!(image.width  % 3))  image.width  += 1;
-    
-    m = (BW **)calloc(image.height, sizeof(unsigned int *));
-    for(unsigned int i = 0; i < image.height; i++)
+    unsigned int new_width = width;
+    unsigned int new_height = height;
+    while (new_height % 4) new_height += 1;
+    while (new_width  % 3)  new_width  += 1;
+    //---------------get_memory_for_BW_matrix-------------------------
+    m = (BW **)calloc(height, sizeof(unsigned int *));
+    for(unsigned int i = 0; i < height; i++)
     {
-        m[i] = (BW *)calloc(image.width, sizeof(unsigned int *));
+        m[i] = (BW *)calloc(width, sizeof(unsigned int *));
     }
-    
-    get_BW_matrix(image.height, image.width, m, matrix);      //error 
-    print_BW_matrix(image.height, image.width, m);   
+    //---------------get_memory_for_BW_matrix-------------------------
+    do_zeros(new_height, new_width, m);
+    get_BW_matrix(height, width, m, matrix);      //error 
     free (matrix);
+    print_BW_matrix(height, width, m);   
+
     
 //
-    
-    free (m);
+//    free (matrix);
+    //free (m);
     
     
     return 0;
