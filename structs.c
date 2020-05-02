@@ -116,7 +116,7 @@ void get_RGB_matrix(unsigned int height, unsigned int width, RGB** matrix,  FILE
             matrix[i][j].red = fgetc(f);
             matrix[i][j].green = fgetc(f);
             matrix[i][j].blue = fgetc(f);
-            fgetc(f);
+            //fgetc(f);
         }
     }
     //return matrix;
@@ -135,26 +135,28 @@ void get_BW_matrix(unsigned int height, unsigned int width, BW** m, RGB **matrix
 
 void print_RGB_matrix(unsigned int height, unsigned int width, RGB **matrix)
 {
+     printf("\n");
     for (unsigned int i = 0; i != height; i++)
     {
         printf("[");
         for (unsigned int j = 0; j != width; j++)
         {
-            printf(" %u.%u.%u ", matrix[i][j].red,  matrix[i][j].green, matrix[i][j].blue);
+            printf(" %d.%d.%d ", matrix[i][j].red,  matrix[i][j].green, matrix[i][j].blue);
         }
-        printf("]\n\n");
+        printf("]\n");
     }
 }
 void print_BW_matrix(unsigned int height, unsigned int width, BW** m)
 {
+    printf("\n");
     for (unsigned int i = 0; i < height; i++)
     {
         printf("\n[");
         for (unsigned int j = 0; j < width; j++)
         {
-            printf(" %u ", m[i][j].darkness);
+            printf(" %d ", m[i][j].darkness);
         }
-        printf("]\n");
+        printf("]");
     }
 }
 
@@ -173,24 +175,25 @@ int check_open_file(char* way, FILE *f)
     return 0;
 }
 
-//void print_RGB_matrix_in_file(unsigned int height, unsigned int width, FILE *f)
-//{
-////    fseek(f, 54, 0);
-////    for (unsigned int i = 0; i != height; i++)
-////    {
-////        printf("[");
-////        for (unsigned int j = 0; j != width; j++)
-////        {
-////            int r, g, b;
-////            r = fgetc(f);    
-////            g = fgetc(f);  
-////            b = fgetc(f); 
-////           // a = fgetc(f);
+void print_RGB_matrix_in_file(unsigned int height, unsigned int width, FILE *f)
+{
+    fseek(f, 54, 0);
+    printf("\n");
+    for (unsigned int i = 0; i != height; i++)
+    {
+        printf("[");
+        for (unsigned int j = 0; j != width; j++)
+        {
+            int r, g, b, a;
+            r = fgetc(f);    
+            g = fgetc(f);  
+            b = fgetc(f); 
+            //a = fgetc(f);
             
-////            printf(" %d.%d.%d", r, g, b);
-////        }
-////        printf("]\n\n");
-////    }
+            printf(" %d.%d.%d  ", r, g, b);
+        }
+        printf("]\n");
+    }
   
 //    fseek(f, 0, 0);
 //    int r = 0; int g = 0; //int b = 0;
@@ -201,7 +204,7 @@ int check_open_file(char* way, FILE *f)
 //                g++;
 //            }
 //    printf("\nn = %d ", g);
-//}
+}
 
 void do_white(unsigned int new_height, unsigned int new_width, BW** m)
 {
@@ -209,7 +212,49 @@ void do_white(unsigned int new_height, unsigned int new_width, BW** m)
     {
         for (unsigned int j = 0; j < new_width; j++)
         {
-            m[i][j].darkness = 255;
+            m[i][j].darkness = 8;
         }
     }
+}
+
+void get_BW_matrix_3x4(unsigned int n_h, unsigned int n_w,
+                                            unsigned int count, BW*** m_3x4, BW** m)
+{
+    unsigned int i= 0;
+    unsigned int j = 0;
+    int k = -1;
+    do
+    {
+        do
+        {
+            if (!(i % 3)) k++;
+            m_3x4[i % 3][j % 4][k] = m[i][j];
+            i++;
+        } while (i < n_w);
+        i = 0;
+        j++;
+    } while (j < n_h);
+    
+    if ((int)count == k) printf("\ncount == k\n");
+}
+
+void print_BW_matrix_3x4(unsigned int w, unsigned int h, 
+                                              unsigned int count, BW*** m_3x4)
+{
+   
+    printf("\n");
+    for (unsigned int k = 0; k < count; k++)
+    {
+        for (unsigned int j = 0; j < h; j++)
+        {
+            printf("[");
+            for (unsigned int i = 0; i < w; i++)
+            {
+                printf(" %u ", m_3x4[i][j][k].darkness);
+            }
+            printf("]\n");
+        }
+        printf("\n");
+    }
+
 }

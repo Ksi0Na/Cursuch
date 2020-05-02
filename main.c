@@ -22,10 +22,13 @@ int main()
         fclose(f);//////////////////////////////////////////
         main();
     } 
-    unsigned int width = get_width(f);
-    unsigned int height = get_height(f);
+    
+    //=============================================
+    //=============================================   
 
     RGB **matrix; 
+    unsigned int width = get_width(f);
+    unsigned int height = get_height(f);
     //---------------get_memory_for_RGB_matrix------------------------
     matrix = (RGB **)calloc(height, sizeof(unsigned int *));
     for(unsigned int i = 0; i < height; i++)
@@ -34,10 +37,13 @@ int main()
     }
     //---------------get_memory_for_RGB_matrix------------------------
     get_RGB_matrix(height, width, matrix, f);        
-    //print_RGB_matrix(height, width, matrix);
+    print_RGB_matrix(height, width, matrix);
     //print_RGB_matrix_in_file(height, width, f);
     fclose(f);////////////////////////////////////////////
-
+    
+    //=============================================
+    //=============================================   
+    
     BW** m;
     unsigned int new_width = width;
     unsigned int new_height = height;
@@ -54,10 +60,31 @@ int main()
     get_BW_matrix(height, width, m, matrix);     
     free (matrix);
     print_BW_matrix(new_height, new_width, m);   
+    
+    //=============================================
+    //=============================================       
 
+    BW*** m_3x4;
+    unsigned int count = new_height * new_width / 12;
+    //unsigned int h = 4;
+    //unsigned int w = 3;
+     //---------------get_memory_for_BW_matrixs_3x4------------------
+    m_3x4 = (BW ***)calloc(count, sizeof(unsigned int **));
+    for(unsigned int i = 0; i < count; i++)
+    {
+        m_3x4[i] = (BW **)calloc(4, sizeof(unsigned int *));
+        for(unsigned int j = 0; j < 4; j++)
+        {
+            m_3x4[i][j] = (BW *)calloc(3, sizeof(unsigned int ));
+        }
+    }
+    //void do_memory_for_3D_matrix(h, w, count, m);
+    //---------------get_memory_for_BW_matrixs_3x4------------------
+    //get_BW_matrix_3x4(new_width, new_height, count, m_3x4, m);
+    print_BW_matrix_3x4(3, 4, count, m_3x4);
     
 //
-//    free (matrix);
+
     free (m);
     
     
