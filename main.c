@@ -38,7 +38,7 @@ int main()
     //---------------get_memory_for_RGB_matrix------------------------
     get_RGB_matrix(height, width, matrix, f);        
     print_RGB_matrix(height, width, matrix);
-    //print_RGB_matrix_in_file(height, width, f);
+    print_RGB_matrix_in_file(height, width, f);
     fclose(f);////////////////////////////////////////////
     
     //=============================================
@@ -69,24 +69,23 @@ int main()
     //unsigned int h = 4;
     //unsigned int w = 3;
      //---------------get_memory_for_BW_matrixs_3x4------------------
-    m_3x4 = (BW ***)calloc(count, sizeof(unsigned int **));
-    for(unsigned int i = 0; i < count; i++)
+    m_3x4 = (BW ***)calloc(3, sizeof(unsigned int **));
+    for(unsigned int i = 0; i < 3; i++)
     {
         m_3x4[i] = (BW **)calloc(4, sizeof(unsigned int *));
         for(unsigned int j = 0; j < 4; j++)
         {
-            m_3x4[i][j] = (BW *)calloc(3, sizeof(unsigned int ));
+            m_3x4[i][j] = (BW *)calloc(count, sizeof(unsigned int ));
         }
     }
     //void do_memory_for_3D_matrix(h, w, count, m);
     //---------------get_memory_for_BW_matrixs_3x4------------------
-    //get_BW_matrix_3x4(new_width, new_height, count, m_3x4, m);
+    get_BW_matrix_3x4(new_width, new_height, count, m_3x4, m);
     print_BW_matrix_3x4(3, 4, count, m_3x4);
     
-//
-
     free (m);
     
+    free (m_3x4);
     
     return 0;
 }

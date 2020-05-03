@@ -108,6 +108,7 @@ unsigned int get_height(FILE *f)
 
 void get_RGB_matrix(unsigned int height, unsigned int width, RGB** matrix,  FILE *f)
 {
+    //for 4 byte
     fseek(f, 54, 0);
     for (unsigned int i = 0; i != height; i++)
     {
@@ -116,7 +117,7 @@ void get_RGB_matrix(unsigned int height, unsigned int width, RGB** matrix,  FILE
             matrix[i][j].red = fgetc(f);
             matrix[i][j].green = fgetc(f);
             matrix[i][j].blue = fgetc(f);
-            //fgetc(f);
+            fgetc(f);
         }
     }
     //return matrix;
@@ -177,6 +178,7 @@ int check_open_file(char* way, FILE *f)
 
 void print_RGB_matrix_in_file(unsigned int height, unsigned int width, FILE *f)
 {
+    //for 3 byte
     fseek(f, 54, 0);
     printf("\n");
     for (unsigned int i = 0; i != height; i++)
@@ -184,7 +186,7 @@ void print_RGB_matrix_in_file(unsigned int height, unsigned int width, FILE *f)
         printf("[");
         for (unsigned int j = 0; j != width; j++)
         {
-            int r, g, b, a;
+            int r, g, b;
             r = fgetc(f);    
             g = fgetc(f);  
             b = fgetc(f); 
@@ -217,25 +219,20 @@ void do_white(unsigned int new_height, unsigned int new_width, BW** m)
     }
 }
 
-void get_BW_matrix_3x4(unsigned int n_h, unsigned int n_w,
+void get_BW_matrix_3x4(unsigned int h, unsigned int w,
                                             unsigned int count, BW*** m_3x4, BW** m)
 {
-    unsigned int i= 0;
-    unsigned int j = 0;
-    int k = -1;
-    do
+    unsigned int k = 0;
+    for (unsigned int j = 0; j < h; j++)
     {
-        do
+        for (unsigned int i = 0; i < w; i++)
         {
-            if (!(i % 3)) k++;
+            if ((i % 3) * (j % 4) == 6) k++;
             m_3x4[i % 3][j % 4][k] = m[i][j];
-            i++;
-        } while (i < n_w);
-        i = 0;
-        j++;
-    } while (j < n_h);
+        }
+    }
     
-    if ((int)count == k) printf("\ncount == k\n");
+    if (count == k) printf("\ncount == k\n");
 }
 
 void print_BW_matrix_3x4(unsigned int w, unsigned int h, 
