@@ -20,7 +20,8 @@ void do_BW_matrix(unsigned int, unsigned int, BW**);
 
 void get_RGB_matrix(unsigned int, unsigned int, RGB**, FILE *);
 void get_BW_matrix(unsigned int, unsigned int, BW**, RGB**);
-void get_BW_matrix_3x4(unsigned int, unsigned int, unsigned int, BW***, BW**);
+void get_BW_matrix_3x4(unsigned int, unsigned int, unsigned int, BW***,
+                                            unsigned int, unsigned int, BW**);
 
 void do_white(unsigned int, unsigned int, BW**);
 
