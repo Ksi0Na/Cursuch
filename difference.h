@@ -13,7 +13,7 @@ typedef struct _Difference
 } Difference;
 
 void get_difference(int count, int new_M, int new_N,
-                                Alphabet*, double***);
+                                Alphabet_new* alphabet, double*** matrix_NxM);
 
 
 #endif // DIFFERENCE_H
