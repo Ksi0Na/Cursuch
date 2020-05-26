@@ -15,6 +15,10 @@ typedef struct _Alphabet_new
 
 } Alphabet_new;
 
-void get_alphabet();
+
+Alphabet_new get_alphabet_new(int new_M, int new_N, 
+                                      Alphabet);
+
+Alphabet_new* work_with_alphabet();
 
 #endif // ALPHABET_H
