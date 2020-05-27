@@ -318,8 +318,11 @@ COEF* work_with_file_matrix()
     unsigned int count = new_height * new_width / (N * M);   
     N *= M; M= 1;
     
-    COEF* coef = memory_COEF(count, new_height, new_width);
-    get_COEF_matrix(count, new_height, new_width, m, coef);  
+    COEF* coef = memory_COEF(count, N, M);
+    get_COEF_matrix(count, N, M, m, coef); 
+    
+    coef->n_h = m->h;
+    coef->n_w = m->w;
 
     delete_BW(m);
     

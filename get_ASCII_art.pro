@@ -10,7 +10,6 @@ SOURCES += \
         picture.c
 
 HEADERS += \
-	ASCII_art.h \
 	alphabet.h \
 	difference.h \
 	picture.h

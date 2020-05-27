@@ -32,6 +32,9 @@ typedef struct _COEF
     int h;
     unsigned c;
     
+    int n_w;
+    int n_h;
+    
     double ***m;
 
 } COEF;

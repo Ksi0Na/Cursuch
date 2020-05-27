@@ -3,29 +3,7 @@
 //HEIGHT = 20;
 //WIDTH = 13;
 
-AC get_AC(int h, int w, A ASCII)
-{
-    int new_N = h * w; 
-    int new_M = 1;
-    AC ASCII_column;
-    
-    int a = 0, b= 0;
-    ASCII_column.symbol = ASCII.symbol;
-    for (int n = 0; n < new_N; n++)
-        for (int m=0; m < new_M; m++)
-        {
-            ASCII_column.matrix[n][m] = ASCII.matrix[a][b];
-            b++;
-            if(b > new_M)
-            {
-                b = 0; a++;
-            }
-        }
-    
-    return ASCII_column;
-}
-
-AC* work_with_alphabet()
+void get_AC(int h, int w, AC* ASCII_column)
 {
     A ASCII[95] = 
     { { 
@@ -2403,18 +2381,51 @@ AC* work_with_alphabet()
              { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }}
      }
     };
-     
-    AC *ASCII_column= (AC*)calloc(95, (sizeof(AC)));
+    
+    int new_N = h * w; 
+    int new_M = 1;
+    
+    int a = 0, b= 0;
     
     for (int i = 0; i < 95; i++)
     {
-        ASCII_column[i] = get_AC(20, 13, ASCII[i]);
+        ASCII_column[i].symbol = ASCII[i].symbol;
+        for (int n = 0; n < new_N; n++)
+            for (int m=0; m < new_M; m++)
+            {
+                ASCII_column[i].matrix[n][m] = ASCII[i].matrix[a][b];
+                b++;
+                if(b > new_M)
+                {
+                    b = 0; a++;
+                }
+            }
     }
+}
+
+AC* work_with_alphabet()
+{
+    AC *ASCII_column= get_memoty_AC();
+    
+    get_AC(20, 13, ASCII_column);
 
     return ASCII_column;
 }
 
 void delete_AC(AC* ASCII_column)
 {
+    for (int i = 0; i < 95; i++)
+        free(ASCII_column->matrix[i]);
     free(ASCII_column);
+}
+
+AC* get_memoty_AC()
+{
+    AC *ASCII_column = (AC*)calloc(95, (sizeof(AC)));
+    
+    ASCII_column->matrix = (int**)calloc(260, (sizeof(int*)));
+    for(int i = 0; i < 260; i++)
+        ASCII_column->matrix[i] = (int*)calloc(1, (sizeof(int*)));
+        
+    return  ASCII_column;
 }

@@ -4,21 +4,23 @@
 typedef struct _Alphabet
 {
     char symbol;
-    char matrix[20][13];
+    int matrix[20][13];
 
 } A;
 
 typedef struct _AlphabetColumn
 {
     char symbol;
-    char **matrix;
+    int **matrix;
 
 } AC;
 
 
-AC* get_alphabet_new(int new_M, int new_N, A);
+void get_AC(int new_M, int new_N, AC*);
 
 AC* work_with_alphabet();
+
+AC* get_memoty_AC();
 
 void delete_AC(AC*);
 
