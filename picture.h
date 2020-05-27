@@ -8,11 +8,33 @@
 
 typedef struct _RGB
 {
-    int red;
-    int green;
-    int blue;
+    int width;
+    int height;
+    
+    int **red;
+    int **green;
+    int **blue;
 
 } RGB;
+
+typedef struct _BW
+{
+    int w;
+    int h;
+    
+    int **m;
+
+} BW;
+
+typedef struct _COEF
+{
+    int w;
+    int h;
+    unsigned c;
+    
+    double ***m;
+
+} COEF;
 
 
 int check_open_file(char*, FILE*);
@@ -20,27 +42,30 @@ int check_open_file(char*, FILE*);
 int read_number(int, int);
 char* smart_str();
 char* request_way();
-int file_type_check(FILE);
+int file_type_check(FILE*);
+//////////////////////////////////////
+int get_width(FILE*);
+int get_height(FILE*);
 
-int get_width(FILE);
-int get_height(FILE);
-void get_RGB_matrix(int, int, RGB**, FILE);
-
+RGB* memory_RGB(int, int);
+void get_RGB_matrix(int, int, RGB*, FILE*);
+void delete_RGB(RGB*);
+//////////////////////////////////////
 int get_new_width(int, int);
 int get_new_height(int, int);
-void do_white(int, int, int**);
-int** get_BW_matrix(int, int, int**, RGB **);
+void do_white(BW*);
 
-RGB** do_RGB(FILE);
-void delete_RGB(RGB**, int);
+BW* memory_BW(int, int);
+void get_BW_matrix(int, int, RGB*, BW*);
+int get_BW_m(BW*, int, int);
+void delete_BW(BW*);
+//////////////////////////////////////
+COEF* memory_COEF(unsigned int, int, int);
+void get_COEF_matrix(unsigned int, int, int, BW*, COEF*);
+void get_coef(COEF*);
+void set_COEF_m(COEF*, unsigned, int, int, int);
+void delete_COEF(COEF*);
 
-int** do_BW_matrix(int, int, int, int, RGB**);
-void delete_BW(int**, int);
-
-double*** do_matrix_NxM(unsigned int, int, int, int**);
-double*** get_BW_matrix_NxM(unsigned int, int, int, int**);
-double*** get_coef(unsigned int, int, int, double***);
-
-double*** work_with_file_matrix();
+COEF* work_with_file_matrix();
 
 #endif // PICTURE_H

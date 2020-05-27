@@ -3,25 +3,31 @@
 //HEIGHT = 20;
 //WIDTH = 13;
 
-Alphabet_new get_alphabet_new(int h, int w, 
-                                      Alphabet ASCII)
+AC get_AC(int h, int w, A ASCII)
 {
     int new_N = h * w; 
     int new_M = 1;
-    Alphabet_new ASCII_column;
+    AC ASCII_column;
     
-    int iter = 0;
+    int a = 0, b= 0;
     ASCII_column.symbol = ASCII.symbol;
     for (int n = 0; n < new_N; n++)
         for (int m=0; m < new_M; m++)
-            ASCII_column.matrix[n][m] = *(&(ASCII.matrix[0][0]) + iter++);
+        {
+            ASCII_column.matrix[n][m] = ASCII.matrix[a][b];
+            b++;
+            if(b > new_M)
+            {
+                b = 0; a++;
+            }
+        }
     
     return ASCII_column;
 }
 
-Alphabet_new* work_with_alphabet()
+AC* work_with_alphabet()
 {
-    Alphabet ASCII[95] = 
+    A ASCII[95] = 
     { { 
         .symbol = ' ', 
         .matrix = {
@@ -2398,12 +2404,17 @@ Alphabet_new* work_with_alphabet()
      }
     };
      
-    Alphabet_new *ASCII_column= (Alphabet_new*)calloc(95, (sizeof(Alphabet_new)));
+    AC *ASCII_column= (AC*)calloc(95, (sizeof(AC)));
     
     for (int i = 0; i < 95; i++)
     {
-        ASCII_column[i] = get_alphabet_new(20, 13, ASCII[i]);
+        ASCII_column[i] = get_AC(20, 13, ASCII[i]);
     }
 
-    return &ASCII_column[0];
+    return ASCII_column;
+}
+
+void delete_AC(AC* ASCII_column)
+{
+    free(ASCII_column);
 }

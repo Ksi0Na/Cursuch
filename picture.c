@@ -64,12 +64,12 @@ char* request_way()
     }
     return way;
 }
-int file_type_check(FILE f)
+int file_type_check(FILE *f)
 {
-    rewind(&f);
+    rewind(f);
     char type[2];
     for (int i = 0; i != 2; i++) 
-        type[i] = fgetc(&f);
+        type[i] = fgetc(f);
 
 
     if (type[0] != 'B' || type[1] != 'M')
@@ -81,56 +81,94 @@ int file_type_check(FILE f)
     }
     return 0;
 }
-
-int get_width(FILE f)
+/////////////////////////////////////////
+int get_width(FILE *f)
 {
     int width;
-    fseek(&f, 18, 0);
-    fread(&(width), 4, 1, &f);
+    fseek(f, 18, 0);
+    fread(&(width), 4, 1, f);
     return width;
 }
-int get_height(FILE f)
+int get_height(FILE *f)
 {
     int height;
-    fseek(&f, 22, 0);
-    fread(&(height), 4, 1, &f);
+    fseek(f, 22, 0);
+    fread(&(height), 4, 1, f);
     return height;
 }
-void get_RGB_matrix(int height, int width, RGB** matrix,  FILE f)
+
+void get_RGB_matrix(int height, int width, RGB* matrix,  FILE *f)
 {
+    matrix->width = width;
+    matrix->height = height;
+    
     int bytes;
-    fseek(&f, 34, 0);
-    fread(&(bytes), 4, 1, &f);
+    fseek(f, 34, 0);
+    fread(&(bytes), 4, 1, f);
     bytes = bytes / (height * width);
     if (bytes == 4)
     {
-        fseek(&f, 54, 0);
-        for (int i = 0; i != height; i++)
+        fseek(f, 54, 0);
+        for (int i = 0; i !=  matrix->height; i++)
         {
-            for (int j = 0; j != width; j++)
+            for (int j = 0; j !=  matrix->width; j++)
             {
-                matrix[i][j].red = fgetc(&f);
-                matrix[i][j].green = fgetc(&f);
-                matrix[i][j].blue = fgetc(&f);
-                fgetc(&f);
+                matrix->red[i][j] = fgetc(f);
+                matrix->green[i][j] = fgetc(f);
+                matrix->blue[i][j] = fgetc(f);
+                fgetc(f);
             }
         }
     }   
     else 
     {
-        fseek(&f, 54, 0);
-        for (int i = 0; i != height; i++)
+        fseek(f, 54, 0);
+        for (int i = 0; i !=  matrix->height; i++)
         {
-            for (int j = 0; j != width; j++)
+            for (int j = 0; j !=  matrix->width; j++)
             {
-                matrix[i][j].red = fgetc(&f);
-                matrix[i][j].green = fgetc(&f);
-                matrix[i][j].blue = fgetc(&f);
+                matrix->red[i][j] = fgetc(f);
+                matrix->green[i][j] = fgetc(f);
+                matrix->blue[i][j] = fgetc(f);
             }
         }
     }
 }
-
+RGB* memory_RGB(int height, int width)
+{
+   RGB *matrix = malloc(sizeof(RGB));
+      
+   matrix->red = (int**)calloc(height, sizeof(int *));
+    for(int i = 0; i < height; i++)
+    {
+       matrix->red[i] = (int *)calloc(width, sizeof(int *));
+    }
+    
+    matrix->green = (int**)calloc(height, sizeof(int *));
+    for(int i = 0; i < height; i++)
+    {
+        matrix->green[i] = (int *)calloc(width, sizeof(int *));
+    }
+    
+    matrix->blue = (int**)calloc(height, sizeof(int *));
+    for(int i = 0; i < height; i++)
+    {
+        matrix->blue[i] = (int *)calloc(width, sizeof(int *));
+    }
+    
+    return matrix;
+}
+void delete_RGB(RGB* matrix)
+{
+    for (int i = 0; i <  matrix->height; i++)
+    {
+        free(matrix->red[i]);
+        free(matrix->green[i]);
+        free(matrix->blue[i]);
+    }
+    free(matrix);
+}
+/////////////////////////////////////////
 int get_new_width(int width, int M)
 {
     int new_width = width;
@@ -143,132 +181,106 @@ int get_new_height(int height, int N)
     while (new_height  % N)  new_height  += 1;
     return new_height;
 }
-void do_white(int new_height, int new_width, int** m)
+
+void do_white(BW* m)
 {
-    for (int i = 0; i < new_height; i++)
+    for (int i = 0; i < m->h; i++)
     {
-        for (int j = 0; j < new_width; j++)
+        for (int j = 0; j < m->w; j++)
         {
-            m[i][j] = 255;
+            m->m[i][j] = 255;
         }
     }
 }
-int** get_BW_matrix(int height, int width, int** m, RGB **matrix)
+BW* memory_BW(int new_height, int new_width)
 {
-    for (int i = 0; i != height; i++)
-    {
-        for (int j = 0; j != width; j++)
-        {
-            if(!(matrix[i][j].red + matrix[i][j].green + matrix[i][j].blue)) m[i][j] = 0;
-            m[i][j] = (matrix[i][j].red + matrix[i][j].green + matrix[i][j].blue) / 3;
-        }
-    }
-    
-    return &m[0];
-}
-
-RGB** do_RGB(FILE f)
-{
-    RGB **matrix; 
-    int width = get_width(f);
-    int height = get_height(f);
-    //---------------get_memory_for_RGB_matrix------------------------
-    matrix = (RGB **)calloc(height, sizeof(int *));
-    for(int i = 0; i < height; i++)
-    {
-        matrix[i] = (RGB *)calloc(width, sizeof(int *));
-    }
-    //---------------get_memory_for_RGB_matrix------------------------
-    get_RGB_matrix(height, width, matrix, f);   
-    
-    return &matrix[0];
-}
-void delete_RGB(RGB** matrix, int height)
-{
-    for (int i = 0; i < height; i++)     
-        free(matrix[i]);
-    free(matrix);
-}
-
-int** do_BW_matrix(int new_height, int new_width,
-                                int height, int width, RGB** matrix)
-{
-    int**m;
-    //---------------get_memory_for_BW_matrix-------------------------
-    m = (int **)calloc(new_height, sizeof(int *));
+   BW *m = malloc(sizeof(BW));
+      
+   m->m = (int**)calloc(new_height, sizeof(int *));
     for(int i = 0; i < new_height; i++)
     {
-        m[i] = (int *)calloc(new_width, sizeof(int *));
+       m->m[i] = (int *)calloc(new_width, sizeof(int *));
     }
-    //---------------get_memory_for_BW_matrix-------------------------
-    do_white(new_height, new_width, m);
-    get_BW_matrix(height, width, m, matrix);     
     
-    return &m[0];
+    return m;
 }
-void delete_BW(int** m, int new_height)
+void get_BW_matrix(int new_height, int new_width, RGB* matrix, BW* m)
 {
-    for(int i = 0; i < new_height; i++)     free(m[i]);
+    m->h = new_height;
+    m->w = new_width;
+    
+    do_white(m);
+    
+    for(int i = 0; i < matrix->height; i++)
+        for(int j = 0; j < matrix->width; j++)
+            m->m[i][j] = (matrix->red[i][j] + matrix->blue[i][j] + matrix->green[i][j]) /3;
+}
+int get_BW_m(BW* m, int h, int w)
+{
+    return m->m[h][w];
+}
+void delete_BW(BW* m)
+{
+    for(int i = 0; i < m->h; i++)     free(m->m[i]);
     free(m);
 }
-
-double*** do_matrix_NxM(unsigned int count, int N, int M, int** m)
+/////////////////////////////////////////
+COEF* memory_COEF(unsigned int count, int new_height, int new_width)
 {
-    double*** matrix_NxM;
-    //---------------get_memory_for_BW_matrixs------------
-   matrix_NxM = (double ***)calloc(count, sizeof(unsigned int **));
-   for(unsigned int i = 0; i < count; i++)
-   {
-       matrix_NxM[i] = (double **)calloc(N, sizeof(int *));
-       for(int j = 0; j < N; j++)
-       {
-           matrix_NxM[i][j] = (double *)calloc(M, sizeof(int ));
-       }
-   }
-   //---------------get_memory_for_BW_matrixs-------------
-   matrix_NxM = get_BW_matrix_NxM(count, N, M, m);
-   matrix_NxM = get_coef(count, N, M, matrix_NxM);
-
-   double* v0 = &matrix_NxM[0][0][0];
-   double** v1 = &v0;
-   double*** v2 = &v1;
-   
-   return v2;
+    COEF* coef = malloc(sizeof (COEF));
+    
+    coef->m = (double***)calloc(count, sizeof (unsigned int**));
+    for(unsigned i =0; i < count; i++)
+    {
+        coef->m[i] = (double**)calloc(new_height, sizeof (int*));
+        for(int j =0; j < new_height; j++)
+        {
+            coef->m[i][j] = (double*)calloc(new_width, sizeof (int));
+        }
+    }
+    
+    return coef;
 }
-double*** get_coef(unsigned int count, int N, int M,
-                            double*** matrix_NxM)
+void get_coef(COEF* coef)
 {
-    for(unsigned int i = 0; i < count; i++)
-        for(int j = 0; j < N; j++)
-            for(int k = 0; k < M; k++)
+    for(unsigned int i = 0; i < coef->c; i++)
+        for(int j = 0; j < coef->h; j++)
+            for(int k = 0; k < coef->w; k++)
+                coef->m[i][j][k] /= 255 ;
+}
+void get_COEF_matrix(unsigned int count, int N, int M, BW* m, COEF* coef)
+{
+    coef->c = count;
+    coef->h = N;
+    coef->w = M;
+    
+    int h = 0, w = 0;
+    for (unsigned int c = 0; c < coef->c; c++)
+        for (int b = 0; b < coef->h; b++)
+            for (int a = 0; a < coef->w; a++)
             {
-                matrix_NxM[i][j][k] /= 255 ;
+                set_COEF_m(coef, c, b, a, get_BW_m(m, h, w));
+                w++;
+                if(w > m->w)
+                {
+                    w =0; h++;
+                }
             }
-    
-    double* v0 = &matrix_NxM[0][0][0];
-    double** v1 = &v0;
-    double*** v2 = &v1;
-    
-    return v2;
+    get_coef(coef);
 }
-double*** get_BW_matrix_NxM(unsigned int count, int N, int M, int** m)
+void set_COEF_m(COEF* coef, unsigned c, int b, int a, int value)
 {
-    double matrix_NxM[count][N][M];
-    
-    int iter = 0;
-    for (unsigned int c = 0; c < count; c++)
-        for (int n = 0; n < N; n++)
-            for (int m_=0; m_ < M; m_++)
-                matrix_NxM[c][n][m_] = *(&(m[0][0]) + iter++);
-    
-    double* v0 = &matrix_NxM[0][0][0];
-    double** v1 = &v0;
-    double*** v2 = &v1;
-    
-    return v2;
+    coef->m[c][b][a] = value;
+}
+void delete_COEF(COEF* coef)
+{
+    for(unsigned i = 0; i < coef->c; i++)
+        for(int j = 0; j < coef->h; j++)
+            free(coef->m[i][j]);
+    free(coef);
 }
 
-double*** work_with_file_matrix()
+COEF* work_with_file_matrix()
 {
     FILE *f;
     //---------------------get_memory_for_way---------------------
@@ -279,16 +291,17 @@ double*** work_with_file_matrix()
     
     free(way);
     
-    if ( file_type_check(*f)) {
+    if ( file_type_check(f)) {
         fclose(f);////////////////////////////////////
         work_with_file_matrix();
     } 
     //======================================
-    int width = get_width(*f);
-    int height = get_height(*f);
+    int width = get_width(f);
+    int height = get_height(f);
     
-     RGB **matrix = do_RGB(*f);
-    
+    RGB* matrix = memory_RGB(height, width);
+    get_RGB_matrix(height, width, matrix, f);  
+     
     fclose(f);/////////////////////////////////////
     //======================================
     int N = 20;
@@ -297,21 +310,18 @@ double*** work_with_file_matrix()
     int new_width = get_new_width(width, M);
     int new_height = get_new_height(height, N);
     
-    int** m = do_BW_matrix(new_height, new_width,
-                                           height, width, matrix);
+    BW* m = memory_BW(new_height, new_width);
+    get_BW_matrix(new_height, new_width, matrix, m);  
 
-    delete_RGB(matrix, height);
+     delete_RGB(matrix);
     //======================================     
     unsigned int count = new_height * new_width / (N * M);   
     N *= M; M= 1;
     
-    double*** matrix_NxM = do_matrix_NxM(count, N, M, m);
-     
-    delete_BW(m, new_height);
+    COEF* coef = memory_COEF(count, new_height, new_width);
+    get_COEF_matrix(count, new_height, new_width, m, coef);  
+
+    delete_BW(m);
     
-    double* v0 = &matrix_NxM[0][0][0];
-    double** v1 = &v0;
-    double*** v2 = &v1;
-     
-    return v2;
+    return coef;
 }
